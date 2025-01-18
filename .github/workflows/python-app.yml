@@ -10,14 +10,14 @@ on:
 
 permissions:
   contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+   def example_function():
+    print("This is an example function")  # إضافة مسافة بادئة صحيحة
       with:
         python-version: "3.10"
     - name: Install dependencies
