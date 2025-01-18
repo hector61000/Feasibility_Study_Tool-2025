@@ -18,7 +18,26 @@ import google.generativeai as genai
 
 class FeasibilityStudyGenerator:
     def __init__(self):
-        """تهيئة المولد"""
+        """
+        تهيئة مولد دراسات الجدوى للمشاريع المصرية.
+        
+        يقوم هذا المُنشئ بتهيئة نموذج Google Gemini وإعداد هيكل أقسام دراسة الجدوى. يتضمن التهيئة:
+        - التحقق من وجود مفتاح API
+        - تكوين نموذج Gemini للذكاء الاصطناعي
+        - إنشاء هيكل منظم لأقسام دراسة الجدوى يشمل 8 أقسام رئيسية
+        
+        يرفع استثناء ValueError إذا لم يتم العثور على مفتاح API.
+        
+        الأقسام تغطي جوانب متعددة تشمل:
+        - الجدوى الاقتصادية
+        - الجدوى الفنية
+        - الجدوى التسويقية
+        - الجدوى القانونية
+        - الجدوى الاجتماعية والبيئية
+        - إدارة المخاطر
+        - الخطط التوسعية
+        - الخاتمة
+        """
         # تحميل مفتاح API
         api_key = "AIzaSyCV9Xr7syuMEeXW7-H9Favc4er7GORNgxM"
         
@@ -72,7 +91,24 @@ class FeasibilityStudyGenerator:
         }
 
     def generate_content(self, project_name, section):
-        """توليد محتوى لقسم معين من دراسة الجدوى"""
+        """
+        توليد محتوى لقسم محدد من دراسة الجدوى باستخدام نموذج الذكاء الاصطناعي.
+        
+        Parameters:
+            project_name (str): اسم المشروع المراد إنشاء دراسة الجدوى له
+            section (str): القسم المحدد من دراسة الجدوى المطلوب توليد محتواه
+        
+        Returns:
+            str: المحتوى المولد للقسم المحدد، أو سلسلة فارغة في حالة فشل التوليد
+        
+        Raises:
+            يتم معالجة الأخطاء داخلياً ويتم طباعة رسائل الخطأ
+        
+        Notes:
+            - يستخدم تأخير زمني لتجنب تجاوز حدود واجهة برمجة التطبيقات
+            - يدعم توليد محتوى باللغة العربية لأقسام مختلفة من دراسة الجدوى
+            - يعتمد على قاموس محدد مسبقاً للأقسام والنماذج الخاصة بكل قسم
+        """
         current_year = "2025"
         prompts = {
             "مقدمة": f"""اكتب مقدمة شاملة لدراسة جدوى {project_name} في مصر لعام {current_year}.
@@ -173,7 +209,29 @@ class FeasibilityStudyGenerator:
             return ""
 
     def create_feasibility_study(self, project_name, output_dir):
-        """إنشاء دراسة جدوى كاملة لمشروع محدد"""
+        """
+        Create a comprehensive feasibility study document for a specific project.
+        
+        This method generates a detailed Word document containing a feasibility study for the given project. The document includes:
+        - A title page with the project name
+        - Important notes about price estimates and market context
+        - Table of contents
+        - Detailed sections covering various aspects of project feasibility
+        - A copyright footer
+        
+        Parameters:
+            project_name (str): The name of the project for which the feasibility study is being generated
+            output_dir (str): The directory where the generated feasibility study document will be saved
+        
+        Raises:
+            Exception: If there are any errors during document creation or content generation
+        
+        Notes:
+            - Uses python-docx library for document creation
+            - Generates content dynamically using self.generate_content method
+            - Sets specific document formatting including margins and page breaks
+            - Saves the document as a .docx file in the specified output directory
+        """
         try:
             doc = Document()
             
@@ -241,7 +299,28 @@ class FeasibilityStudyGenerator:
             print(f"خطأ في إنشاء دراسة الجدوى لـ {project_name}: {str(e)}")
 
     def generate_all_studies(self):
-        """توليد دراسات جدوى لجميع المشاريع"""
+        """
+        يولد دراسات الجدوى لمجموعة متنوعة من المشاريع في السوق المصري.
+        
+        يقوم بالعمليات التالية:
+        - قراءة قائمة المشاريع من ملف JSON
+        - إنشاء المجلدات اللازمة للتصنيفات المختلفة للمشاريع
+        - توليد دراسات جدوى للفئات التالية:
+          * المشاريع الصناعية
+          * المشاريع الزراعية
+          * المشاريع الخدمية
+          * المشاريع متعددة الخدمات
+        
+        يعالج الأخطاء المحتملة ويوفر معلومات تفصيلية أثناء عملية التوليد.
+        
+        ملاحظات:
+        - يتطلب وجود ملف projects.json
+        - يقوم بإنشاء مجلد generated_studies تلقائيًا
+        - يطبع تفاصيل التقدم والأخطاء أثناء التنفيذ
+        
+        استثناءات:
+        - يتعامل مع أي أخطاء قد تحدث أثناء القراءة أو التوليد
+        """
         try:
             print("بدء عملية توليد دراسات الجدوى...")
             
