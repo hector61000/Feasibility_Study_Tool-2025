@@ -34,4 +34,10 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
+       main
         python -m pytest tests/
+
+        # أضف التغييرات المناسبة هنا بعد مراجعة التعديلات
+        echo "Running pytest tests"
+        pytest
+        master
