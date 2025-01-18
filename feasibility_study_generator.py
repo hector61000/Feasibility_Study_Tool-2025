@@ -219,7 +219,7 @@ class FeasibilityStudyGenerator:
     def create_feasibility_study(self, project_name, output_dir):
         """إنشاء دراسة جدوى كاملة لمشروع محدد"""
         try:
-            doc = self.create_document(project_name, "مشروع")
+            doc = Document()
             
             # إعداد الصفحة
             sections = doc.sections
