@@ -18,7 +18,26 @@ import google.generativeai as genai
 
 class FeasibilityStudyGenerator:
     def __init__(self):
-        """
+main
+        """تهيئة المولد"""
+        try:
+            # تحميل مفتاح API
+            load_dotenv()
+            api_key = os.getenv("GOOGLE_API_KEY")
+            
+            if not api_key:
+                api_key = "AIzaSyCV9Xr7syuMEeXW7-H9Favc4er7GORNgxM"  # مفتاح احتياطي للتطوير
+                print("تحذير: تم استخدام مفتاح API الاحتياطي")
+            
+            # تهيئة Google Gemini
+            genai.configure(api_key=api_key)
+            self.model = genai.GenerativeModel('gemini-pro')
+            print("✅ تم تهيئة النموذج بنجاح")
+            
+        except Exception as e:
+            print(f"❌ حدث خطأ أثناء التهيئة: {str(e)}")
+            raise
+         """
         تهيئة مولد دراسات الجدوى للمشاريع المصرية.
         
         يقوم هذا المُنشئ بتهيئة نموذج Google Gemini وإعداد هيكل أقسام دراسة الجدوى. يتضمن التهيئة:
@@ -48,6 +67,7 @@ class FeasibilityStudyGenerator:
         # تهيئة Google Gemini
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel('gemini-pro')
+        master
         
         # هيكل الأقسام
         self.sections = {
@@ -90,7 +110,88 @@ class FeasibilityStudyGenerator:
             "القسم الثامن: الخاتمة": [""]
         }
 
-    def generate_content(self, project_name, section):
+           def generate_content(self, project_name, section):
+           main
+        """توليد محتوى لقسم معين من دراسة الجدوى"""
+        try:
+            current_year = "2025"
+            prompts = {
+                "مقدمة": f"""اكتب مقدمة شاملة لدراسة جدوى {project_name} في مصر لعام {current_year}.
+                يجب أن تتضمن المقدمة:
+                - أهمية المشروع في السوق المصري
+                - الفرص المتاحة في السوق
+                - لماذا يعتبر هذا المشروع مناسباً للسوق المصري
+                - التحديات والفرص في السوق المصري
+                اكتب المحتوى باللغة العربية، واستخدم العملة المصرية (الجنيه المصري) في جميع التكاليف.""",
+                
+                "القسم الأول: دراسة الجدوى الاقتصادية": f"""اكتب دراسة الجدوى الاقتصادية التفصيلية ل{project_name} في مصر لعام {current_year}.
+                يجب أن تتضمن:
+                - التكاليف الاستثمارية بالجنيه المصري
+                - تكاليف التشغيل الشهرية
+                - الإيرادات المتوقعة
+                - فترة استرداد رأس المال
+                - معدل العائد على الاستثمار
+                - تحليل نقطة التعادل
+                استخدم أسعار وتكاليف واقعية للسوق المصري في {current_year}.""",
+                
+                "القسم الثاني: دراسة الجدوى الفنية": f"""اكتب دراسة الجدوى الفنية التفصيلية ل{project_name} في مصر لعام {current_year}.
+                يجب أن تتضمن:
+                - المتطلبات الفنية للمشروع
+                - المعدات والآلات المطلوبة مع أسعارها بالجنيه المصري
+                - المساحة المطلوبة والموقع المناسب
+                - العمالة المطلوبة ومؤهلاتهم
+                - خطوات الإنتاج أو تقديم الخدمة
+                استخدم معلومات تقنية حديثة ومناسبة للسوق المصري.""",
+                
+                "القسم الثالث: دراسة الجدوى التسويقية": f"""اكتب دراسة الجدوى التسويقية التفصيلية ل{project_name} في مصر لعام {current_year}.
+                يجب أن تتضمن:
+                - تحليل السوق المصري
+                - المنافسين في السوق
+                - الفئة المستهدفة
+                - استراتيجيات التسويق المناسبة للسوق المصري
+                - قنوات التوزيع
+                - تحليل الأسعار في السوق المصري""",
+                
+                "القسم الرابع: دراسة الجدوى القانونية": f"""اكتب دراسة الجدوى القانونية التفصيلية ل{project_name} في مصر لعام {current_year}.
+                يجب أن تتضمن:
+                - الشكل القانوني للمشروع
+                - التراخيص المطلوبة
+                - الإجراءات القانونية
+                - التكاليف القانونية بالجنيه المصري
+                - المتطلبات الحكومية
+                استخدم المعلومات القانونية الحديثة المطبقة في مصر.""",
+                
+                "القسم الخامس: دراسة الجدوى الاجتماعية والبيئية": f"""اكتب دراسة الجدوى الاجتماعية والبيئية ل{project_name} في مصر لعام {current_year}.
+                يجب أن تتضمن:
+                - الأثر الاجتماعي للمشروع
+                - فرص العمل التي سيوفرها
+                - الآثار البيئية
+                - إجراءات الحماية البيئية
+                - المسؤولية الاجتماعية""",
+                
+                "القسم السادس: المخاطر المحتملة وكيفية التعامل معها": f"""اكتب تحليلاً للمخاطر المحتملة ل{project_name} في مصر لعام {current_year}.
+                يجب أن تتضمن:
+                - المخاطر السوقية
+                - المخاطر المالية
+                - المخاطر التشغيلية
+                - المخاطر القانونية
+                - استراتيجيات إدارة المخاطر""",
+                
+                "القسم السابع: الخطة التوسعية والتوقعات المستقبلية": f"""اكتب الخطة التوسعية والتوقعات المستقبلية ل{project_name} في مصر لعام {current_year}.
+                يجب أن تتضمن:
+                - خطط التوسع المستقبلية
+                - التوقعات المالية للسنوات القادمة
+                - فرص النمو في السوق المصري
+                - التطورات المتوقعة في المجال
+                استخدم توقعات واقعية تناسب السوق المصري.""",
+                
+                "القسم الثامن: الخاتمة": f"""اكتب خاتمة لدراسة جدوى {project_name} في مصر لعام {current_year}.
+                يجب أن تتضمن:
+                - ملخص لأهم النقاط في الدراسة
+                - توصيات نهائية
+                - نظرة مستقبلية للمشروع"""
+            }
+
         """
         توليد محتوى لقسم محدد من دراسة الجدوى باستخدام نموذج الذكاء الاصطناعي.
         
@@ -146,67 +247,64 @@ class FeasibilityStudyGenerator:
             - استراتيجيات التسويق المناسبة للسوق المصري
             - قنوات التوزيع
             - تحليل الأسعار في السوق المصري""",
+ master
             
-            "القسم الرابع: دراسة الجدوى القانونية": f"""اكتب دراسة الجدوى القانونية التفصيلية ل{project_name} في مصر لعام {current_year}.
-            يجب أن تتضمن:
-            - الشكل القانوني للمشروع
-            - التراخيص المطلوبة
-            - الإجراءات القانونية
-            - التكاليف القانونية بالجنيه المصري
-            - المتطلبات الحكومية
-            استخدم المعلومات القانونية الحديثة المطبقة في مصر.""",
-            
-            "القسم الخامس: دراسة الجدوى الاجتماعية والبيئية": f"""اكتب دراسة الجدوى الاجتماعية والبيئية ل{project_name} في مصر لعام {current_year}.
-            يجب أن تتضمن:
-            - الأثر الاجتماعي للمشروع
-            - فرص العمل التي سيوفرها
-            - الآثار البيئية
-            - إجراءات الحماية البيئية
-            - المسؤولية الاجتماعية""",
-            
-            "القسم السادس: المخاطر المحتملة وكيفية التعامل معها": f"""اكتب تحليلاً للمخاطر المحتملة ل{project_name} في مصر لعام {current_year}.
-            يجب أن تتضمن:
-            - المخاطر السوقية
-            - المخاطر المالية
-            - المخاطر التشغيلية
-            - المخاطر القانونية
-            - استراتيجيات إدارة المخاطر""",
-            
-            "القسم السابع: الخطة التوسعية والتوقعات المستقبلية": f"""اكتب الخطة التوسعية والتوقعات المستقبلية ل{project_name} في مصر لعام {current_year}.
-            يجب أن تتضمن:
-            - خطط التوسع المستقبلية
-            - التوقعات المالية للسنوات القادمة
-            - فرص النمو في السوق المصري
-            - التطورات المتوقعة في المجال
-            استخدم توقعات واقعية تناسب السوق المصري.""",
-            
-            "القسم الثامن: الخاتمة": f"""اكتب خاتمة لدراسة جدوى {project_name} في مصر لعام {current_year}.
-            يجب أن تتضمن:
-            - ملخص لأهم النقاط في الدراسة
-            - توصيات نهائية
-            - نظرة مستقبلية للمشروع"""
-        }
-        
-        try:
-            print(f"جاري توليد المحتوى لـ {project_name} - {section}")
-            
-            prompt = prompts.get(section, "")
-            if not prompt:
-                print(f"لم يتم العثور على قسم {section} في قوائم الأقسام")
-                return ""
-            
-            time.sleep(2)  # تأخير لتجنب تجاوز حدود API
-            response = self.model.generate_content(prompt)
-            if response and response.text:
-                print(f"تم توليد المحتوى بنجاح لـ {section}")
-                return response.text
-            else:
-                print(f"فشل في توليد المحتوى لـ {section}: لا يوجد نص في الاستجابة")
+            try:
+                print(f"جاري توليد المحتوى لـ {project_name} - {section}")
+                
+                prompt = prompts.get(section, "")
+                if not prompt:
+                    print(f"لم يتم العثور على قسم {section} في قوائم الأقسام")
+                    return ""
+                
+                time.sleep(2)  # تأخير لتجنب تجاوز حدود API
+                response = self.model.generate_content(prompt)
+                if response and response.text:
+                    print(f"تم توليد المحتوى بنجاح لـ {section}")
+                    return response.text
+                else:
+                    print(f"فشل في توليد المحتوى لـ {section}: لا يوجد نص في الاستجابة")
+                    return ""
+                    
+            except Exception as e:
+                print(f"خطأ في توليد محتوى القسم {section}: {str(e)}")
                 return ""
                 
         except Exception as e:
             print(f"خطأ في توليد محتوى القسم {section}: {str(e)}")
             return ""
+
+    def create_document(self, project_name, project_type):
+        """إنشاء مستند دراسة الجدوى"""
+        try:
+            doc = Document()
+            
+            # إعداد العنوان
+            title = doc.add_heading(f'دراسة جدوى مشروع {project_name}', 0)
+            title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            
+            # إضافة معلومات الشركة
+            company_info = doc.add_paragraph()
+            company_info.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            company_info.add_run('تم إعداد هذه الدراسة بواسطة\nشركة Green Light للتكنولوجيا والتطوير\n').bold = True
+            company_info.add_run('معتمد من Google Cloud Platform').italic = True
+            
+            # إضافة التاريخ
+            date_paragraph = doc.add_paragraph()
+            date_paragraph.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            date_paragraph.add_run(f'تاريخ الإصدار: {time.strftime("%Y-%m-%d")}')
+            
+            # إضافة معلومات حقوق النشر
+            footer = doc.sections[0].footer
+            footer_paragraph = footer.paragraphs[0]
+            footer_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            footer_paragraph.add_run('© 2025 جميع الحقوق محفوظة لشركة Green Light للتكنولوجيا والتطوير').font.size = Pt(8)
+            
+            return doc
+            
+        except Exception as e:
+            print(f"❌ حدث خطأ أثناء إنشاء المستند: {str(e)}")
+            return None
 
     def create_feasibility_study(self, project_name, output_dir):
         """
@@ -243,19 +341,6 @@ class FeasibilityStudyGenerator:
                 section.left_margin = Inches(1)
                 section.right_margin = Inches(1)
             
-            # صفحة العنوان
-            title = doc.add_heading(f"دراسة جدوى {project_name}", level=0)
-            title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-            
-            # إضافة معلومات هامة
-            doc.add_paragraph()
-            important_note = doc.add_paragraph("هام جدا:")
-            important_note.runs[0].bold = True
-            doc.add_paragraph("الأسعار المذكورة في هذه الدراسة هي أسعار تقديرية تستند إلى السوق المصري وتواكب المتغيرات الاقتصادية الحالية لعام 2024")
-            doc.add_paragraph("يمكن تكييف دراسة الجدوى وفقًا لرأس المال المتاح، بما يلبي احتياجاتك ويحقق أهدافك الاستثمارية.")
-            
-            doc.add_page_break()
-            
             # جدول المحتويات
             doc.add_heading("جدول المحتويات", level=1)
             for section_name, subsections in self.sections.items():
@@ -283,12 +368,6 @@ class FeasibilityStudyGenerator:
                 
                 # إضافة فاصل صفحات بين الأقسام الرئيسية
                 doc.add_page_break()
-            
-            # إضافة حقوق الملكية
-            footer = doc.sections[0].footer
-            footer_para = footer.paragraphs[0]
-            footer_para.text = "Green Light © 2025 - جميع الحقوق محفوظة"
-            footer_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
             
             # حفظ الملف
             output_file = os.path.join(output_dir, f"{project_name}.docx")
